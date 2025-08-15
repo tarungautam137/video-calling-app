@@ -8,7 +8,7 @@ const server = http.createServer(app);
 
 app.use(cors());
 
-const io = new Server(server, { cors: { origin: true } });
+const io = new Server(server, { cors: { origin: "https://video-calling-app-frontend-ycoy.onrender.com" } });
 
 const pairs = {};
 const socketRoom = {};
