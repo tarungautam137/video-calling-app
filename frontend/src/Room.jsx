@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router";
 
-const socket = io("http://localhost:5174");
+const socket = io("https://video-calling-app-signaling-service.onrender.com",{path:"/socket.io"});
 
 const configuration = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
