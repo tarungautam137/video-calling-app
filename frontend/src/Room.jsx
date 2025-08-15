@@ -19,13 +19,13 @@ const Room = () => {
 
   const { roomId } = useParams();
 
-  // peerConnection is now a ref created per component instance
+  
   const peerConnection = useRef(new RTCPeerConnection(configuration));
 
-  // buffer for local ICE candidates until we know remoteSocketId
+ 
   const candidateBuffer = useRef([]);
 
-  // keep a ref to the userStream so cleanup can access latest stream
+ 
   const userStreamRef = useRef(null);
 
   // 1 - HANDLES CONNECTION OF ICE CANDIDATES AND RECEIVED REMOTE TRACKS
@@ -68,7 +68,6 @@ const Room = () => {
     };
 
     return () => {
-      // optional cleanup of handlers (do not close here — overall cleanup handled in unmount cleanup)
       if (peerConnection.current) {
         peerConnection.current.onicecandidate = null;
         peerConnection.current.ontrack = null;
@@ -195,7 +194,7 @@ const Room = () => {
         try {
           userStreamRef.current.getTracks().forEach((t) => t.stop());
         } catch (e) {
-          // ignore
+          
         }
         userStreamRef.current = null;
         setUserStream(null);
