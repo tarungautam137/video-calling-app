@@ -2,7 +2,10 @@ import { useState, useRef, useEffect } from "react";
 import { io } from "socket.io-client";
 import { useParams } from "react-router";
 
-const socket = io("https://video-calling-app-signaling-service.onrender.com",{path:"/socket.io"});
+const socket = io("https://video-calling-app-signaling-service.onrender.com", {
+  path: "/socket.io",
+});
+//const socket = io("http://localhost:5174");
 
 const configuration = {
   iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
@@ -19,13 +22,10 @@ const Room = () => {
 
   const { roomId } = useParams();
 
-  
   const peerConnection = useRef(new RTCPeerConnection(configuration));
 
- 
   const candidateBuffer = useRef([]);
 
- 
   const userStreamRef = useRef(null);
 
   // 1 - HANDLES CONNECTION OF ICE CANDIDATES AND RECEIVED REMOTE TRACKS
@@ -193,9 +193,7 @@ const Room = () => {
       if (userStreamRef.current) {
         try {
           userStreamRef.current.getTracks().forEach((t) => t.stop());
-        } catch (e) {
-          
-        }
+        } catch (e) {}
         userStreamRef.current = null;
         setUserStream(null);
       }
@@ -229,43 +227,38 @@ const Room = () => {
   };
 
   return (
-    <div className="min-h-screen px-20 py-15 w-screen bg-gray-400">
-      <h1 className="text-center text-3xl mb-10">
-        {remoteSocketId
-          ? `Other User Socket Id:${remoteSocketId}`
-          : `Other User Not Present`}
-      </h1>
+    <div className="relative min-h-screen w-screen bg-gray-400 overflow-hidden">
+      <video
+        ref={remoteVideoRef}
+        autoPlay
+        playsInline
+        className="absolute top-0 left-0 w-full h-full object-cover z-0"
+      />
 
-      <div>
-        <h1 className="text-center text-3xl mb-10">My Stream</h1>
-
-        {remoteSocketId && (
-          <button
-            className="px-5 py-2 cursor-pointer text-center border-1"
-            onClick={makeCall}
-          >
-            CALL
-          </button>
-        )}
-
+      <div className="absolute bottom-6 right-6 z-10 shadow-lg rounded overflow-hidden border-2 border-white bg-black/50">
         <video
           ref={myVideoRef}
           autoPlay
           playsInline
           muted
-          className="w-[640px] h-[480px] object-cover"
+          className="w-40 h-28 object-cover"
         />
       </div>
 
-      <div>
-        <h1 className="text-center text-3xl mb-10">Remote Stream</h1>
-
-        <video
-          ref={remoteVideoRef}
-          autoPlay
-          playsInline
-          className="w-[640px] h-[480px] object-cover"
-        />
+      <div className="absolute top-6 left-1/2 -translate-x-1/2 z-20 text-center">
+        <h1 className="text-3xl mb-5">
+          {remoteSocketId
+            ? `Other User Socket Id : ${remoteSocketId}`
+            : `Other User Not Present`}
+        </h1>
+        {remoteSocketId && !remoteStream && (
+          <button
+            className="px-5 py-2 cursor-pointer text-center border-1 bg-white bg-opacity-80 rounded"
+            onClick={makeCall}
+          >
+            CALL
+          </button>
+        )}
       </div>
     </div>
   );
